@@ -1,49 +1,70 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+  return {
+    store: {
+      token: "",
+    },
+    actions: {
+      //signup
+      signup: (e, p) => {
+        fetch(
+          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: e, password: p }),
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
+      },
+      //login
+      login: (e, p) => {
+        const store = getStore();
 
-			getMessage: () => {
-				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/hello")
-					.then(resp => resp.json())
-					.then(data => setStore({ message: data.message }))
-					.catch(error => console.log("Error loading message from backend", error));
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+        fetch(
+          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/user/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: e, password: p }),
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setStore({ token: data });
+            sessionStorage.setItem("token", JSON.stringify(data));
+          })
+          .catch((err) => console.log(err));
+      },
+      //validate
+      validate: () => {
+        const store = getStore();
+        fetch(
+          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/private",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
+      },
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
-	};
+      //logout
+      logout: () => {
+        setStore({ token: "" });
+        console.log("Logout completed");
+      },
+    },
+  };
 };
 
 export default getState;

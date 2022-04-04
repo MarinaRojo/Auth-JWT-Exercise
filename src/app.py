@@ -7,10 +7,14 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 #from models import Person
+
+from flask_jwt_extended import JWTManager
+
+
 
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
@@ -25,6 +29,7 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY']= os.environ.get('JWT_SECRET_KEY')
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
@@ -33,6 +38,8 @@ CORS(app)
 
 # add the admin
 setup_admin(app)
+
+jwt=JWTManager(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
@@ -48,6 +55,9 @@ def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
+
+
+
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])

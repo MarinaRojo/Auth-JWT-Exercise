@@ -7,7 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       //signup
       signup: (e, p) => {
         fetch(
-          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/signup",
+          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/signup",
           {
             method: "POST",
             headers: {
@@ -25,7 +25,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore();
 
         fetch(
-          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/user/login",
+          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/user/login",
           {
             method: "POST",
             headers: {
@@ -45,7 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       validate: () => {
         const store = getStore();
         fetch(
-          "https://3001-4geeksacademy-reactflask-rssug2gl2tb.ws-eu38.gitpod.io/api/private",
+          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/private",
           {
             method: "GET",
             headers: {
@@ -54,7 +54,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
         )
           .then((res) => res.json())
-          .then((data) => console.log(data))
+          .then((data) => console.log(store.token))
           .catch((err) => console.log(err));
       },
 

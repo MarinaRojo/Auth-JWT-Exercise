@@ -1,4 +1,6 @@
 const getState = ({ getStore, getActions, setStore }) => {
+  const URL =
+    "https://3001-marinarojo-authjwtexerci-agulp0rfkl5.ws-eu38.gitpod.io/";
   return {
     store: {
       token: "",
@@ -6,16 +8,13 @@ const getState = ({ getStore, getActions, setStore }) => {
     actions: {
       //signup
       signup: (e, p) => {
-        fetch(
-          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/signup",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: e, password: p }),
-          }
-        )
+        fetch(URL + "api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: e, password: p }),
+        })
           .then((res) => res.json())
           .then((data) => console.log(data))
           .catch((err) => console.log(err));
@@ -24,16 +23,13 @@ const getState = ({ getStore, getActions, setStore }) => {
       login: (e, p) => {
         const store = getStore();
 
-        fetch(
-          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/user/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: e, password: p }),
-          }
-        )
+        fetch(URL + "api/user/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: e, password: p }),
+        })
           .then((res) => res.json())
           .then((data) => {
             setStore({ token: data });
@@ -44,15 +40,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       //validate
       validate: () => {
         const store = getStore();
-        fetch(
-          "https://3001-marinarojo-authjwtexerci-9wnp1meybg3.ws-eu38.gitpod.io/api/private",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${store.token}`,
-            },
-          }
-        )
+        fetch(URL + "api/private", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        })
           .then((res) => res.json())
           .then((data) => console.log(store.token))
           .catch((err) => console.log(err));
